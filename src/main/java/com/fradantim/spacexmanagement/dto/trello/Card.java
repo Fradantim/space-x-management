@@ -13,6 +13,7 @@ public class Card {
 	private String desc;
 	private Column list;
 	private List<Label> labels;
+	private List<Member> members;	
 
 	public String getName() {
 		return name;
@@ -52,5 +53,13 @@ public class Card {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public List<Member> getMembers() {
+		return members;
+	}
+
+	public void setMembers(List<Member> members) {
+		this.members = members;
 	}
 }

@@ -1,5 +1,7 @@
 package com.fradantim.spacexmanagement.service.impl;
 
+import java.util.Random;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.fradantim.spacexmanagement.dto.trello.Board;
 import com.fradantim.spacexmanagement.dto.trello.Column;
 import com.fradantim.spacexmanagement.dto.trello.Label;
+import com.fradantim.spacexmanagement.dto.trello.Member;
 import com.fradantim.spacexmanagement.service.TrelloBoardManager;
 import com.fradantim.spacexmanagement.service.TrelloService;
 
@@ -92,5 +95,14 @@ public class TrelloBoardManagerImpl implements TrelloBoardManager {
 			logger.info("Creating Label '{}'", name);
 			return trelloService.createLabel(board, name);
 		}).flatMap(s -> getWorkBoardLabelByName(name));
+	}
+
+	@Override
+	public Mono<Member> getRandomMember() {
+		return getWorkBoard().flatMap(b -> {
+			if (b.getMembers() != null)
+				return Mono.just(b.getMembers().get(new Random().nextInt(b.getMembers().size())));
+			return Mono.empty();
+		});
 	}
 }

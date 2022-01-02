@@ -30,6 +30,8 @@ public class Board {
 
 	private List<Column> lists;
 
+	private List<Member> members;
+
 	public String getName() {
 		return name;
 	}
@@ -108,5 +110,13 @@ public class Board {
 
 	public void setLists(List<Column> lists) {
 		this.lists = lists;
+	}
+
+	public List<Member> getMembers() {
+		return members;
+	}
+
+	public void setMembers(List<Member> members) {
+		this.members = members;
 	}
 }

@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fradantim.spacexmanagement.dto.trello.Board;
 import com.fradantim.spacexmanagement.dto.trello.Card;
 import com.fradantim.spacexmanagement.dto.trello.Label;
+import com.fradantim.spacexmanagement.dto.trello.Member;
 import com.fradantim.spacexmanagement.service.TrelloService;
 
 import reactor.core.publisher.Flux;
@@ -94,6 +95,11 @@ public class TrelloServiceImpl implements TrelloService {
 		if (card.getLabels() != null && !card.getLabels().isEmpty()) {
 			String labels = card.getLabels().stream().map(Label::getId).reduce((idA, idB) -> idA + "," + idB).get();
 			allQueryParams.add("idLabels", labels);
+		}
+
+		if (card.getMembers() != null && !card.getMembers().isEmpty()) {
+			String labels = card.getMembers().stream().map(Member::getId).reduce((idA, idB) -> idA + "," + idB).get();
+			allQueryParams.add("idMembers", labels);
 		}
 
 		return webclient.post().uri(cardsUrl, (ub) -> {

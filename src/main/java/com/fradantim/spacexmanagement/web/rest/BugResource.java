@@ -41,6 +41,9 @@ public class BugResource {
 			return trelloBoardManager.getOrCreateWorkBoardLabelByName("Bug");
 		}).flatMap(label -> {
 			card.setLabels(Arrays.asList(label));
+			return trelloBoardManager.getRandomMember();
+		}).flatMap(member -> {
+			card.setMembers(Arrays.asList(member));
 			return trelloService.createCard(card);
 		});
 	}

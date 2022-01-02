@@ -2,6 +2,7 @@ package com.fradantim.spacexmanagement.service;
 
 import com.fradantim.spacexmanagement.dto.trello.Board;
 import com.fradantim.spacexmanagement.dto.trello.Column;
+import com.fradantim.spacexmanagement.dto.trello.Label;
 
 import reactor.core.publisher.Mono;
 
@@ -14,4 +15,9 @@ public interface TrelloBoardManager {
 	public Mono<Column> getWorkBoardListByName(String name);
 
 	public Mono<Column> getOrCreateWorkBoardListByName(String name);
+	
+	/** May return {@link Mono#empty()} */
+	public Mono<Label> getWorkBoardLabelByName(String name);
+
+	public Mono<Label> getOrCreateWorkBoardLabelByName(String name);
 }

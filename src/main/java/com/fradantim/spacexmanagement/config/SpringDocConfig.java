@@ -60,8 +60,8 @@ public class SpringDocConfig {
 			lists = board.getLists().stream().map(Column::getName).collect(Collectors.toList()).toString();
 		}
 
-		if (board.getLables() != null) {
-			labels = board.getLables().stream().map(Label::getName).filter(StringUtils::isEmpty)
+		if (board.getLabels() != null) {
+			labels = board.getLabels().stream().map(Label::getName).filter(StringUtils::isEmpty)
 					.collect(Collectors.toList()).toString();
 		}
 

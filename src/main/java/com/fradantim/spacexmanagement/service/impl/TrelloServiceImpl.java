@@ -33,6 +33,9 @@ public class TrelloServiceImpl implements TrelloService {
 	@Value("#{${trello.query-params}}")
 	private MultiValueMap<String, String> queryParams;
 
+	@Value("${trello.new-label.color}")
+	private String newLabelColor;
+
 	@Value("${trello.members.me.boards.url}")
 	private String meBoardsUrl;
 
@@ -44,6 +47,9 @@ public class TrelloServiceImpl implements TrelloService {
 
 	@Value("${trello.cards.url}")
 	private String cardsUrl;
+
+	@Value("${trello.labels.url}")
+	private String labelsUrl;
 
 	@Qualifier("trello.webclient")
 	@Autowired
@@ -105,5 +111,18 @@ public class TrelloServiceImpl implements TrelloService {
 			}
 			return card;
 		});
+	}
+
+	@Override
+	public Mono<String> createLabel(Board board, String name) {
+		MultiValueMap<String, String> allQueryParams = new LinkedMultiValueMap<>(queryParams);
+		allQueryParams.add("name", name);
+		allQueryParams.add("idBoard", board.getId());
+		allQueryParams.add("color", newLabelColor);
+
+		return webclient.post().uri(labelsUrl, (ub) -> {
+			ub.queryParams(allQueryParams);
+			return ub.build();
+		}).exchangeToMono(c -> c.bodyToMono(String.class));
 	}
 }

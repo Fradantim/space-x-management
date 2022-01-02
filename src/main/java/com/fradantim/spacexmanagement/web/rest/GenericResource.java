@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.fradantim.spacexmanagement.dto.Bug;
 import com.fradantim.spacexmanagement.dto.GenericRequest;
 import com.fradantim.spacexmanagement.dto.Issue;
 import com.fradantim.spacexmanagement.dto.trello.Card;
@@ -22,6 +23,9 @@ public class GenericResource {
 	@Autowired
 	private IssueResource issueResource;
 
+	@Autowired
+	private BugResource bugResource;
+
 	@Operation(description = "${generic-resource.description}")
 	@PostMapping
 	public Mono<Card> createItem(@RequestBody GenericRequest request) {
@@ -31,7 +35,7 @@ public class GenericResource {
 
 		switch (request.getType()) {
 		case bug: {
-			// TODO
+			return bugResource.createBug(Bug.fromGenericRequest(request));
 		}
 		case issue: {
 			return issueResource.createIssue(Issue.fromGenericRequest(request));

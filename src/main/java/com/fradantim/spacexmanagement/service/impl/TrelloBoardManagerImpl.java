@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fradantim.spacexmanagement.dto.trello.Board;
 import com.fradantim.spacexmanagement.dto.trello.Column;
+import com.fradantim.spacexmanagement.dto.trello.Label;
 import com.fradantim.spacexmanagement.service.TrelloBoardManager;
 import com.fradantim.spacexmanagement.service.TrelloService;
 
@@ -51,9 +52,12 @@ public class TrelloBoardManagerImpl implements TrelloBoardManager {
 
 	@Override
 	public Mono<Column> getWorkBoardListByName(String name) {
-		return getWorkBoard().flatMapMany(b -> Flux.fromIterable(b.getLists()))
-				.filter(l -> l != null && l.getName() != null && name.toLowerCase().equals(l.getName().toLowerCase()))
-				.next();
+		return getWorkBoard().flatMapMany(b -> {
+			if (b.getLists() != null)
+				return Flux.fromIterable(b.getLists());
+
+			return Flux.empty();
+		}).filter(l -> l != null && l.getName() != null && name.toLowerCase().equals(l.getName().toLowerCase())).next();
 	}
 
 	@Override
@@ -66,5 +70,27 @@ public class TrelloBoardManagerImpl implements TrelloBoardManager {
 			logger.info("Creating List '{}'", name);
 			return trelloService.createList(board, name);
 		}).flatMap(s -> getWorkBoardListByName(name));
+	}
+
+	@Override
+	public Mono<Label> getWorkBoardLabelByName(String name) {
+		return getWorkBoard().flatMapMany(b -> {
+			if (b.getLabels() != null)
+				return Flux.fromIterable(b.getLabels());
+
+			return Flux.empty();
+		}).filter(l -> l != null && l.getName() != null && name.toLowerCase().equals(l.getName().toLowerCase())).next();
+	}
+
+	@Override
+	public Mono<Label> getOrCreateWorkBoardLabelByName(String name) {
+		return getWorkBoardLabelByName(name).switchIfEmpty(createLabel(name));
+	}
+
+	private Mono<Label> createLabel(String name) {
+		return getWorkBoard().flatMap(board -> {
+			logger.info("Creating Label '{}'", name);
+			return trelloService.createLabel(board, name);
+		}).flatMap(s -> getWorkBoardLabelByName(name));
 	}
 }

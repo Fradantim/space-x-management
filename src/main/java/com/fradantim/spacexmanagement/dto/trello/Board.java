@@ -26,7 +26,7 @@ public class Board {
 
 	private Map<String, Object> prefs;
 
-	private List<Label> lables;
+	private List<Label> labels;
 
 	private List<Column> lists;
 
@@ -94,12 +94,12 @@ public class Board {
 		this.prefs = prefs;
 	}
 
-	public List<Label> getLables() {
-		return lables;
+	public List<Label> getLabels() {
+		return labels;
 	}
 
-	public void setLables(List<Label> lables) {
-		this.lables = lables;
+	public void setLabels(List<Label> labels) {
+		this.labels = labels;
 	}
 
 	public List<Column> getLists() {

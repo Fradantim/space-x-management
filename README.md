@@ -1,8 +1,8 @@
-# spece-x-management
+# space-x-management
 
 Solution for [The Space-x Challenge](https://doc.clickup.com/p/h/e12h-16043/f3e54f9ffd37f57).
 
-- [spece-x-management](#spece-x-management)
+- [space-x-management](#space-x-management)
 - [Pre requirements](#pre-requirements)
 - [Starting the app](#starting-the-app)
 - [Available features](#available-features)

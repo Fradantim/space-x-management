@@ -39,10 +39,10 @@ public class TrelloBoardManagerImpl implements TrelloBoardManager {
 	public Mono<Board> getWorkBoard() {
 		Mono<Board> workBoard;
 		if (!StringUtils.isEmpty(boardId)) {
-			logger.trace("Looking for board with id {}", boardId);
+			logger.trace("Looking for board with id '{}'", boardId);
 			workBoard = trelloService.findBoardById(boardId);
 		} else {
-			logger.trace("Looking for board with name {}", boardName);
+			logger.trace("Looking for board with name '{}'", boardName);
 			workBoard = trelloService.findOneBoardByName(boardName);
 		}
 
@@ -54,5 +54,17 @@ public class TrelloBoardManagerImpl implements TrelloBoardManager {
 		return getWorkBoard().flatMapMany(b -> Flux.fromIterable(b.getLists()))
 				.filter(l -> l != null && l.getName() != null && name.toLowerCase().equals(l.getName().toLowerCase()))
 				.next();
+	}
+
+	@Override
+	public Mono<Column> getOrCreateWorkBoardListByName(String name) {
+		return getWorkBoardListByName(name).switchIfEmpty(createList(name));
+	}
+
+	private Mono<Column> createList(String name) {
+		return getWorkBoard().flatMap(board -> {
+			logger.info("Creating List '{}'", name);
+			return trelloService.createList(board, name);
+		}).flatMap(s -> getWorkBoardListByName(name));
 	}
 }

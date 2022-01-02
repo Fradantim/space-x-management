@@ -19,6 +19,9 @@ public interface TrelloService {
 	 */
 	public Mono<Board> findOneBoardByName(String name);
 
+	/** The method's return is Trello's undocumentend response */
+	public Mono<String> createList(Board board, String name);
+
 	/** Creates a card in the user's board */
 	public Mono<Card> createCard(Card card);
 }

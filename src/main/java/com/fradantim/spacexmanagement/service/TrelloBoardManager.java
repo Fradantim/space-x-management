@@ -9,6 +9,9 @@ public interface TrelloBoardManager {
 
 	/** Returns the Board defined by the program arguments */
 	public Mono<Board> getWorkBoard();
-	
+
+	/** May return {@link Mono#empty()} */
 	public Mono<Column> getWorkBoardListByName(String name);
+
+	public Mono<Column> getOrCreateWorkBoardListByName(String name);
 }

@@ -31,7 +31,7 @@ public class IssueResource {
 		card.setDesc(issue.getDescription());
 		card.setName(issue.getTitle());
 
-		return trelloBoardManager.getWorkBoardListByName("To Do").flatMap(list -> {
+		return trelloBoardManager.getOrCreateWorkBoardListByName("To Do").flatMap(list -> {
 			card.setList(list);
 			return trelloService.createCard(card);
 		});

@@ -14,7 +14,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,11 +30,17 @@ public class TrelloServiceImpl implements TrelloService {
 
 	private static final Logger logger = LoggerFactory.getLogger(TrelloServiceImpl.class);
 
+	@Value("#{${trello.query-params}}")
+	private MultiValueMap<String, String> queryParams;
+
 	@Value("${trello.members.me.boards.url}")
 	private String meBoardsUrl;
 
 	@Value("${trello.boards.url}")
 	private String boardsUrl;
+
+	@Value("${trello.lists.url}")
+	private String listsUrl;
 
 	@Value("${trello.cards.url}")
 	private String cardsUrl;
@@ -62,20 +67,33 @@ public class TrelloServiceImpl implements TrelloService {
 	}
 
 	@Override
+	public Mono<String> createList(Board board, String name) {
+		MultiValueMap<String, String> allQueryParams = new LinkedMultiValueMap<>(queryParams);
+		allQueryParams.add("name", name);
+		allQueryParams.add("idBoard", board.getId());
+
+		return webclient.post().uri(listsUrl, (ub) -> {
+			ub.queryParams(allQueryParams);
+			return ub.build();
+		}).exchangeToMono(c -> c.bodyToMono(String.class));
+	}
+
+	@Override
 	public Mono<Card> createCard(Card card) {
-		MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-		queryParams.add("name", card.getName());
-		queryParams.add("desc", card.getDesc());
-		queryParams.add("idList", card.getList().getId());
+		MultiValueMap<String, String> allQueryParams = new LinkedMultiValueMap<>(queryParams);
+		allQueryParams.add("name", card.getName());
+		allQueryParams.add("desc", card.getDesc());
+		allQueryParams.add("idList", card.getList().getId());
 
 		if (card.getLabels() != null && !card.getLabels().isEmpty()) {
 			String labels = card.getLabels().stream().map(Label::getId).reduce((idA, idB) -> idA + "," + idB).get();
-			queryParams.add("idLabels", labels);
+			allQueryParams.add("idLabels", labels);
 		}
 
-		String finalUrl = UriComponentsBuilder.fromUriString(cardsUrl).queryParams(queryParams).toUriString();
-
-		return webclient.post().uri(finalUrl).exchangeToMono(c -> c.bodyToMono(String.class)).map(response -> {
+		return webclient.post().uri(cardsUrl, (ub) -> {
+			ub.queryParams(allQueryParams);
+			return ub.build();
+		}).exchangeToMono(c -> c.bodyToMono(String.class)).map(response -> {
 			try {
 				@SuppressWarnings("rawtypes")
 				Map parsedResponse = objectMapper.readValue(response, Map.class);

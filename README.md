@@ -23,7 +23,7 @@ Make sure all the required environment variables are loaded:
 Once those are set launch the following command at the root of this project:
 
 ```
-mvn spring-boot:run
+mvnw spring-boot:run
 ```
 
 If you followed the steps after a few seconds you should see

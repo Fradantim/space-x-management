@@ -1,26 +1,23 @@
 package com.fradantim.spacexmanagement.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
 public class GenericRequest {
 
-	@Schema(allowableValues = { "bug", "issue", "task" })
-	private String type;
+	private GenericRequestType type;
 
 	private String title;
 
 	private String description;
 
-	private String category;
+	private TaskCategory category;
 
 	public GenericRequest() {
 	}
 
-	public String getType() {
+	public GenericRequestType getType() {
 		return type;
 	}
 
-	public void setType(String type) {
+	public void setType(GenericRequestType type) {
 		this.type = type;
 	}
 
@@ -40,11 +37,11 @@ public class GenericRequest {
 		this.description = description;
 	}
 
-	public String getCategory() {
+	public TaskCategory getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(TaskCategory category) {
 		this.category = category;
 	}
 }

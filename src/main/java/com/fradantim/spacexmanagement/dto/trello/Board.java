@@ -1,5 +1,6 @@
-package com.fradantim.spacexmanagement.trello.dto;
+package com.fradantim.spacexmanagement.dto.trello;
 
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,6 +25,10 @@ public class Board {
 	private String url;
 
 	private Map<String, Object> prefs;
+
+	private List<Label> lables;
+
+	private List<Column> lists;
 
 	public String getName() {
 		return name;
@@ -87,5 +92,21 @@ public class Board {
 
 	public void setPrefs(Map<String, Object> prefs) {
 		this.prefs = prefs;
+	}
+
+	public List<Label> getLables() {
+		return lables;
+	}
+
+	public void setLables(List<Label> lables) {
+		this.lables = lables;
+	}
+
+	public List<Column> getLists() {
+		return lists;
+	}
+
+	public void setLists(List<Column> lists) {
+		this.lists = lists;
 	}
 }

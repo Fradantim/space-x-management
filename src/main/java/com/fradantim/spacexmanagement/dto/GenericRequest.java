@@ -1,7 +1,10 @@
 package com.fradantim.spacexmanagement.dto;
 
+import org.springframework.lang.NonNull;
+
 public class GenericRequest {
 
+	@NonNull
 	private GenericRequestType type;
 
 	private String title;

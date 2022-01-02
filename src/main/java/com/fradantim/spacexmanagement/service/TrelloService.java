@@ -1,6 +1,7 @@
 package com.fradantim.spacexmanagement.service;
 
-import com.fradantim.spacexmanagement.trello.dto.Board;
+import com.fradantim.spacexmanagement.dto.trello.Board;
+import com.fradantim.spacexmanagement.dto.trello.Card;
 
 import reactor.core.publisher.Mono;
 
@@ -17,4 +18,7 @@ public interface TrelloService {
 	 * {@link Mono#empty()}
 	 */
 	public Mono<Board> findOneBoardByName(String name);
+
+	/** Creates a card in the user's board */
+	public Mono<Card> createCard(Card card);
 }

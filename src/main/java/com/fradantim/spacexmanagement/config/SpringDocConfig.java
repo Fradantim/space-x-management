@@ -2,6 +2,7 @@ package com.fradantim.spacexmanagement.config;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.fradantim.spacexmanagement.dto.trello.Board;
+import com.fradantim.spacexmanagement.dto.trello.Column;
+import com.fradantim.spacexmanagement.dto.trello.Label;
 import com.fradantim.spacexmanagement.service.TrelloBoardManager;
-import com.fradantim.spacexmanagement.trello.dto.Board;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -23,7 +26,8 @@ public class SpringDocConfig {
 	@Bean
 	public OpenAPI springShopOpenAPI(@Autowired TrelloBoardManager boardManager, @Value("${app.name}") String appName,
 			@Value("${app.build-version}") String buildVersion) {
-		return new OpenAPI().info(new Info().title(appName).description(buildDescription(boardManager.getWorkBoard()))
+		Board board = boardManager.getWorkBoard().block();
+		return new OpenAPI().info(new Info().title(appName).description(buildDescription(board))
 				.version("v" + buildVersion));
 	}
 
@@ -50,9 +54,21 @@ public class SpringDocConfig {
 			sBuilder.append(MARKDOWN_LINE_BREAK);
 		}
 
+		String lists = "[]", labels = "[]";
+
+		if (board.getLists() != null) {
+			lists = board.getLists().stream().map(Column::getName).collect(Collectors.toList()).toString();
+		}
+
+		if (board.getLables() != null) {
+			labels = board.getLables().stream().map(Label::getName).filter(StringUtils::isEmpty)
+					.collect(Collectors.toList()).toString();
+		}
+
 		appendElementsAsList(sBuilder, "Board id **" + board.getId() + "**",
 				"Organization id **" + board.getOrganitzationId() + "**",
-				"Creator id **" + board.getMemberCreatorId() + "**");
+				"Creator id **" + board.getMemberCreatorId() + "**", "Available Lists at startup : " + lists,
+				"Available Labels at startup : " + labels);
 
 		return sBuilder.toString();
 	}

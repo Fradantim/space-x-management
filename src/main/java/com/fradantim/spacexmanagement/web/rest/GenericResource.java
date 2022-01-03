@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.fradantim.spacexmanagement.dto.Bug;
 import com.fradantim.spacexmanagement.dto.GenericRequest;
 import com.fradantim.spacexmanagement.dto.Issue;
+import com.fradantim.spacexmanagement.dto.Task;
 import com.fradantim.spacexmanagement.dto.trello.Card;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +26,9 @@ public class GenericResource {
 
 	@Autowired
 	private BugResource bugResource;
+
+	@Autowired
+	private TaskResource taskResource;
 
 	@Operation(description = "${generic-resource.description}")
 	@PostMapping
@@ -41,10 +45,11 @@ public class GenericResource {
 			return issueResource.createIssue(Issue.fromGenericRequest(request));
 		}
 		case task: {
-			// TODO
+			return taskResource.createTask(Task.fromGenericRequest(request));
 		}
 		}
 
+		// wont step here
 		return Mono.empty();
 	}
 }

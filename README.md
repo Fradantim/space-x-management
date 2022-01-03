@@ -6,6 +6,9 @@ Solution for [The Space-x Challenge](https://doc.clickup.com/p/h/e12h-16043/f3e5
 - [Pre requirements](#pre-requirements)
 - [Starting the app](#starting-the-app)
 - [Available features](#available-features)
+  - [Issue creation](#issue-creation)
+  - [Bug creation](#bug-creation)
+  - [Task creation](#task-creation)
 
 # Pre requirements
 - Java 8 or Better.
@@ -37,3 +40,70 @@ in the terminal output, that means the app started successfully. You can further
 !["Open Api"]("/img/../../img/OpenApi.png)
 
 # Available features
+
+## Issue creation
+
+```
+curl -X 'POST' 'http://localhost:8080/' \
+  -d '{
+  "type": "issue",
+  "title": "A good title",
+  "description": "A specific description"
+}'
+```
+or
+```
+curl -X 'POST' 'http://localhost:8080/issues' \
+  -d '{
+  "title": "A good title",
+  "description": "A specific description"
+}'
+```
+
+Result:
+
+!["Issue"]("/img/../../img/Issue.png) 
+
+## Bug creation
+
+```
+curl -X 'POST' 'http://localhost:8080/' \
+  -d '{
+  "type": "bug",
+  "description": "An specific description"
+}'
+```
+or
+```
+curl -X 'POST' 'http://localhost:8080/bugs' \
+  -d '{
+  "description": "A specific description"
+}'
+```
+
+Result:
+
+!["Bug"]("/img/../../img/Bug.png) 
+
+## Task creation
+
+```
+curl -X 'POST' 'http://localhost:8080/' \
+  -d '{
+  "type": "task",
+  "title": "Buy more lamps",
+  "category": "Maintenance"
+}'
+```
+or
+```
+curl -X 'POST' 'http://localhost:8080/tasks' \
+  -d '{
+  "title": "Buy more lamps",
+  "category": "Maintenance"
+}'
+```
+
+Result:
+
+!["Task"]("/img/../../img/Task.png) 
